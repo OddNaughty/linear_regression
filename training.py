@@ -16,8 +16,7 @@ def estimate_price(mileage, t0, t1):
 def train_algo(price, km):
     t0 = t1 = 0
     a = 0.005
-    print ("t0 and t1: ", (t0, t1))
-    for i in range(30000):
+    for _ in range(30000):
         t0, t1 = regression_one(km, price, t0, t1, a)
     plt.plot(price, km, 'yo', price, [t0 + t1 * x for x in price], '--k')
     plt.show()
