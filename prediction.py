@@ -8,7 +8,6 @@ def main():
                 t0, t1, mi, ma = [float(i.strip()) for i in f.readlines()]
             except ValueError:
                 sys.exit("The file was ill-formed, please relaunch training")
-            print ("I follow the linear function: '{} * x + {}'".format(t0, t1))
             mil = int(input("Mileage : ").strip())
             print ("Estimated price is: ", t0 + t1*(((mil - mi) / (ma - mi))))
     except FileNotFoundError:

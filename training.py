@@ -1,6 +1,14 @@
 import csv, argparse
 import matplotlib.pyplot as plt
 
+def estimate_error(km, price, t0, t1):
+    totalError = 0
+    for i in range(len(km)):
+        x = km[i]
+        y = price[i]
+        totalError += (y - (t1 * x + t0)) ** 2
+    return totalError / float(len(km))
+
 def regression_one(price, km, t0, t1, learningRate):
     new_t0 = new_t1 = 0
     for i in range(len(km)):
@@ -43,6 +51,7 @@ def main(show):
         t0, t1 = train_algo(values2['price'], values2['km'])
         if show:
             print_graph(values['price'], values['km'], [t0 + (t1 * ((x - values2['min']) / (values2['max'] - values2['min']))) for x in values['km']])
+        print("The margin of error is: ", estimate_error(values['km'], values['price'], t0, t1))
         with open('thetas.txt', 'w') as thetas:
             thetas.write("{}\n{}\n{}\n{}\n".format(t0, t1, values2['min'], values2['max']))
 
