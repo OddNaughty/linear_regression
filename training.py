@@ -1,4 +1,4 @@
-import csv
+import csv, argparse
 import matplotlib.pyplot as plt
 
 def regression_one(price, km, t0, t1, learningRate):
@@ -17,28 +17,37 @@ def train_algo(price, km):
     t0 = t1 = 0
     a = 0.005
     for _ in range(30000):
-        t0, t1 = regression_one(km, price, t0, t1, a)
-    plt.plot(price, km, 'yo', price, [t0 + t1 * x for x in price], '--k')
-    plt.show()
+        t0, t1 = regression_one(price, km, t0, t1, a)
     return (t0, t1)
 
 def scaling(values):
-    for k, v in values.items():
-        mi, ma = min(v), max(v)
-        values[k] = [(x - mi) / (ma - mi) for x in v]
-    return values
+    mi, ma = min(values['km']), max(values['km'])
+    new_values = {'km': [((x - mi) / (ma - mi)) for x in values['km']], 'price': values['price'], 'min': mi, 'max': ma}
+    return new_values
 
-def main():
+def print_graph(km, price, hypothesis):
+    plt.ylabel('Price')
+    plt.xlabel('Mileage')
+    plt.plot(price, km, 'yo')
+    plt.plot(price, hypothesis)
+    plt.show()
+
+def main(show):
     with open('dataset.csv') as f:
         reader = csv.DictReader(f)
         values = {key: [] for key in reader.fieldnames}
         for row in reader:
             for k, v in row.items():
                 values[k].append(int(v))
-        values = scaling(values)
-        t0, t1 = train_algo(values['price'], values['km'])
+        values2 = scaling(values)
+        t0, t1 = train_algo(values2['price'], values2['km'])
+        if show:
+            print_graph(values['price'], values['km'], [t0 + (t1 * ((x - values2['min']) / (values2['max'] - values2['min']))) for x in values['km']])
         with open('thetas.txt', 'w') as thetas:
-            thetas.write("{}\n{}\n".format(t0, t1))
+            thetas.write("{}\n{}\n{}\n{}\n".format(t0, t1, values2['min'], values2['max']))
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--show', action="store_const", const=True)
+    args = parser.parse_args()
+    main(args.show)
