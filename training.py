@@ -51,7 +51,7 @@ def main(show):
         t0, t1 = train_algo(values2['price'], values2['km'])
         if show:
             print_graph(values['price'], values['km'], [t0 + (t1 * ((x - values2['min']) / (values2['max'] - values2['min']))) for x in values['km']])
-        print("The margin of error is: ", estimate_error(values['km'], values['price'], t0, t1))
+        # print("The margin of error is: ", estimate_error(values['km'], values['price'], t0, t1))
         with open('thetas.txt', 'w') as thetas:
             thetas.write("{}\n{}\n{}\n{}\n".format(t0, t1, values2['min'], values2['max']))
 

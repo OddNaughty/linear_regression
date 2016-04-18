@@ -8,8 +8,11 @@ def main():
                 t0, t1, mi, ma = [float(i.strip()) for i in f.readlines()]
             except ValueError:
                 sys.exit("The file was ill-formed, please relaunch training")
-            mil = int(input("Mileage : ").strip())
-            print ("Estimated price is: ", t0 + t1*(((mil - mi) / (ma - mi))))
+            try:
+                mil = int(input("Mileage : ").strip())
+                print ("Estimated price is: ", t0 + t1*(((mil - mi) / (ma - mi))))
+            except ValueError:
+                sys.exit("The mileage given was not an integer. Re-launch program please.")
     except FileNotFoundError:
         print ("No training was done before, the result will be 0")
         input("Mileage : ")
